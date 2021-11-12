@@ -1,20 +1,40 @@
+"""
+Copyright (c) 2021 Philipp Scheer
+"""
+
+
 import os
+import json
 
 from jarvis_sdk import PluginServer
 from jarvis_sdk import Logger
 
-from actions import test
+
+# define your API endpoints in the __init__.py file in the endpoints folder
+# You may also create additional python files and import them in the __init__.py file
+import endpoints
 
 
+# Do not change the following lines
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 CURRENT_WORKING_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
-PORT = 6666
+FILE_BASE_NAME = os.path.basename(__file__).split('.')[0]
+CONFIG = json.load(f"{CURRENT_WORKING_DIRECTORY}/plugin.json")
+PORT = CONFIG.get("port", 6666)
 
-logger = Logger(f"{CURRENT_WORKING_DIRECTORY}/template.log")
-ps     = PluginServer(PORT, logger.info)
+logger = Logger(f"{CURRENT_WORKING_DIRECTORY}/{FILE_BASE_NAME}.log")
+server = PluginServer(PORT, logger.info)
 
-logger.info("Started test plugin")
+logger.info(f"Started {FILE_BASE_NAME} plugin on port {PORT}")
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-try:                        ps.handle_requests()
-except KeyboardInterrupt:   pass
+# Perform any actions before script start here
+# server.handle_requests() is blocking and will run until the parent kills us
+
+try: server.handle_requests()
+except KeyboardInterrupt: pass
+
+# Place actions you want to perform before exit here
 
 logger.info("Stopping plugin")
+exit(0)
