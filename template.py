@@ -19,7 +19,7 @@ import endpoints
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 CURRENT_WORKING_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 FILE_BASE_NAME = os.path.basename(__file__).split('.')[0]
-CONFIG = json.load(f"{CURRENT_WORKING_DIRECTORY}/plugin.json")
+CONFIG = json.load(open(f"{CURRENT_WORKING_DIRECTORY}/plugin.json", "r"))
 PORT = CONFIG.get("port", 6666)
 
 logger = Logger(f"{CURRENT_WORKING_DIRECTORY}/{FILE_BASE_NAME}.log")
